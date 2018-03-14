@@ -2,6 +2,9 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE CPP #-}
 
 import           Data.Monoid
@@ -12,6 +15,10 @@ import           Data.Text (Text)
 import           Network.Wai.Handler.Warp (run)
 import           System.Timeout
 import           Network.URI
+
+data AsServerT (m :: * -> *)
+type instance AsServerT m :- api = ServerT api m
+type AsServer = AsServerT Handler
 
 data Site route = Site
   { about :: route :-

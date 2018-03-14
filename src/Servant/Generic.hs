@@ -12,8 +12,6 @@
 
 module Servant.Generic
   ( (:-)
-  , AsServerT
-  , AsServer
   , AsApi
   , AsLink
   , ToServant
@@ -28,7 +26,8 @@ module Servant.Generic
   ) where
 
 import          GHC.Generics
-import          Servant
+import          Servant.API
+import          Data.Proxy
 
 -- | A class of generic product types.
 class GProduct f where
@@ -94,11 +93,6 @@ type instance AsApi :- api = api
 -- (Useful since servant 0.12)
 data AsLink
 type instance AsLink :- api = MkLink api
-
--- | A type that specifies that an API record contains a server implementation.
-data AsServerT (m :: * -> *)
-type instance AsServerT m :- api = ServerT api m
-type AsServer = AsServerT Handler
 
 -- | Given an API record field, create a link for that route. Only the field's type is used.
 fieldLink :: forall routes endpoint. (IsElem endpoint (ToServant (routes AsApi)), HasLink endpoint) => (routes AsApi -> endpoint) -> MkLink endpoint
